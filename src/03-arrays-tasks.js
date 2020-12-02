@@ -392,9 +392,8 @@ const findAllOccurences = (arr, item) => arr.filter((e) => e === item).length;
  *    [1, 2, 3, 4, 5]                   => '1,2,3,4,5'
  *    ['rock', 'paper', 'scissors']     => 'rock,paper,scissors'
  */
-function toStringList(/* arr */) {
-  throw new Error('Not implemented');
-}
+
+const toStringList = (arr) => arr.join(',');
 
 
 /**
@@ -423,9 +422,10 @@ function toStringList(/* arr */) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
-}
+
+const sortCitiesArray = (arr) => (
+  arr.sort((prev, next) => (prev.country + prev.city > next.country + next.city ? 1 : -1))
+);
 
 /**
  * Creates an indentity matrix of the specified size
@@ -445,9 +445,10 @@ function sortCitiesArray(/* arr */) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
-}
+
+const getIdentityMatrix = (n) => Array.from({ length: n }, (v, k) => Array.from(
+  { length: n }, (_v, i) => (k === i ? 1 : 0),
+));
 
 /**
  * Creates an array of integers from the specified start to end (inclusive)
@@ -462,9 +463,16 @@ function getIdentityMatrix(/* n */) {
  *     0, 100 => [ 0, 1, 2, ..., 100 ]
  *     3, 3   => [ 3 ]
  */
-function getIntervalArray(/* start, end */) {
-  throw new Error('Not implemented');
-}
+
+const getIntervalArray = (start, end) => {
+  const arr = new Array(end - start + 1).fill(0);
+  arr.map((_, i) => {
+    arr[i] = i + start;
+    return arr[i];
+  });
+
+  return arr;
+};
 
 /**
  * Returns array containing only unique values from the specified array.
@@ -477,9 +485,11 @@ function getIntervalArray(/* start, end */) {
  *   [ 'a', 'a', 'a', 'a' ]  => [ 'a' ]
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
  */
-function distinct(/* arr */) {
-  throw new Error('Not implemented');
-}
+
+const distinct = (arr) => arr.filter((item, index, array) => {
+  if (array.indexOf(item) === index) return item;
+  return false;
+});
 
 /**
  * Groups elements of the specified array by key.
@@ -511,9 +521,19 @@ function distinct(/* arr */) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
-}
+
+const group = (array, keySelector, valueSelector) => {
+  const collection = new Map();
+
+  array.map((item) => {
+    if (collection.has(keySelector(item))) {
+      collection.get(keySelector(item)).push(valueSelector(item));
+    } else collection.set(keySelector(item), [valueSelector(item)]);
+    return item;
+  });
+
+  return collection;
+};
 
 
 /**
@@ -529,9 +549,14 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
-}
+const selectMany = (arr, childrenSelector) => {
+  const newArr = [];
+  arr.map((itm) => {
+    childrenSelector(itm).map((item) => newArr.push(item));
+    return itm;
+  });
+  return newArr;
+};
 
 
 /**
@@ -546,9 +571,12 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
-}
+
+const getElementByIndexes = (arr, indexes) => {
+  let newArr = arr;
+  indexes.map((e) => { newArr = newArr[e]; return e; });
+  return newArr;
+};
 
 
 /**
@@ -569,10 +597,17 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
-}
 
+const swapHeadAndTail = (arr) => {
+  const midIndex = Math.floor(arr.length / 2);
+  const head = arr.slice(0, midIndex);
+  if (arr.length % 2) {
+    const tail = arr.slice(midIndex + 1, arr.length);
+    return [...tail, arr[midIndex], ...head];
+  }
+  const tail = arr.slice(midIndex, arr.length);
+  return [...tail, ...head];
+};
 
 module.exports = {
   findElement,
